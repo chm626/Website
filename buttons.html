@@ -1,19 +1,41 @@
 <!DOCTYPE html>
+<html lang="en">
 <head>
-    <title>Buttons</title>
-    <link rel="stylesheet" href="css/style.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Timer Example</title>
 </head>
 <body>
-    <h1>
-        <button>button 1</button>
-    </h1>
-    <h2>
-    
-    </h2>
-    <h3>
-    
-    </h3>
-    <h4>
-    
-    </h4>
+
+<h1>Timer Example</h1>
+
+<p id="timerDisplay">Timer: 0 seconds</p>
+
+<button onclick="startStopTimer()">Start/Stop Timer</button>
+
+<script>
+    let timerRunning = false;
+    let seconds = 0;
+    let timerInterval;
+
+    function startStopTimer() {
+        if (timerRunning) {
+            // If the timer is running, stop it
+            clearInterval(timerInterval);
+            timerRunning = false;
+        } else {
+            // If the timer is not running, start it
+            timerInterval = setInterval(updateTimer, 1000);
+            timerRunning = true;
+        }
+    }
+
+    function updateTimer() {
+        // Update and display the timer
+        seconds++;
+        document.getElementById('timerDisplay').textContent = 'Timer: ' + seconds + ' seconds';
+    }
+</script>
+
 </body>
+</html>
