@@ -18,6 +18,15 @@
     let seconds = 0;
     let timerInterval;
 
+    // Retrieve the timer value from localStorage on page load
+    window.onload = function () {
+        const storedSeconds = localStorage.getItem('timerValue');
+        if (storedSeconds) {
+            seconds = parseInt(storedSeconds, 10);
+            updateTimerDisplay();
+        }
+    };
+
     function startStopTimer() {
         if (timerRunning) {
             clearInterval(timerInterval);
@@ -30,6 +39,13 @@
 
     function updateTimer() {
         seconds++;
+        updateTimerDisplay();
+
+        // Save the timer value to localStorage
+        localStorage.setItem('timerValue', seconds.toString());
+    }
+
+    function updateTimerDisplay() {
         document.getElementById('timerDisplay').textContent = 'Timer: ' + seconds + ' seconds';
     }
 </script>
