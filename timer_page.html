@@ -15,8 +15,12 @@
             justify-content: center;
         }
 
-        #timerDisplay {
-            margin-bottom: 20px;
+        .timer-container {
+            margin-bottom: 40px;
+        }
+
+        .timer-container p {
+            margin-bottom: 10px;
         }
 
         .button-container {
@@ -35,72 +39,67 @@
 </head>
 <body>
 
-<h1>Timer Page</h1>
+<div class="timer-container" id="timer1">
+    <p>Timer 1: 0 seconds</p>
+    <button onclick="startStopTimer(1)">Start/Stop Timer</button>
+</div>
 
-<p id="timerDisplay">Timer: 0 seconds</p>
+<div class="timer-container" id="timer2">
+    <p>Timer 2: 0 seconds</p>
+    <button onclick="startStopTimer(2)">Start/Stop Timer</button>
+</div>
+
+<div class="timer-container" id="timer3">
+    <p>Timer 3: 0 seconds</p>
+    <button onclick="startStopTimer(3)">Start/Stop Timer</button>
+</div>
+
+<div class="timer-container" id="timer4">
+    <p>Timer 4: 0 seconds</p>
+    <button onclick="startStopTimer(4)">Start/Stop Timer</button>
+</div>
 
 <div class="button-container">
-    <button onclick="startStopTimer()">Start/Stop Timer</button>
-    <button onclick="resetTimer()">Reset Timer</button>
-    <button onclick="increaseTimer()">Increase Timer</button>
-    <button onclick="decreaseTimer()">Decrease Timer</button>
+    <button onclick="resetAllTimers()">Reset All Timers</button>
 </div>
 
 <script>
-    let timerRunning = false;
-    let seconds = 0;
-    let timerInterval;
-
-    window.onload = function () {
-        const storedSeconds = localStorage.getItem('timerValue');
-        if (storedSeconds) {
-            seconds = parseInt(storedSeconds, 10);
-            updateTimerDisplay();
-        }
+    const timers = {
+        timer1: { running: false, seconds: 0, interval: null },
+        timer2: { running: false, seconds: 0, interval: null },
+        timer3: { running: false, seconds: 0, interval: null },
+        timer4: { running: false, seconds: 0, interval: null }
     };
 
-    function startStopTimer() {
-        if (timerRunning) {
-            clearInterval(timerInterval);
-            timerRunning = false;
+    function startStopTimer(timerId) {
+        const timer = timers['timer' + timerId];
+        if (timer.running) {
+            clearInterval(timer.interval);
+            timer.running = false;
         } else {
-            timerInterval = setInterval(updateTimer, 1000);
-            timerRunning = true;
+            timer.interval = setInterval(() => updateTimer(timerId), 1000);
+            timer.running = true;
         }
     }
 
-    function resetTimer() {
-        seconds = 0;
-        updateTimerDisplay();
-        saveTimerValue();
+    function resetAllTimers() {
+        Object.values(timers).forEach(timer => {
+            clearInterval(timer.interval);
+            timer.seconds = 0;
+            timer.running = false;
+            updateTimerDisplay(timer);
+        });
     }
 
-    function increaseTimer() {
-        seconds++;
-        updateTimerDisplay();
-        saveTimerValue();
+    function updateTimer(timerId) {
+        const timer = timers['timer' + timerId];
+        timer.seconds++;
+        updateTimerDisplay(timer);
     }
 
-    function decreaseTimer() {
-        if (seconds > 0) {
-            seconds--;
-            updateTimerDisplay();
-            saveTimerValue();
-        }
-    }
-
-    function updateTimer() {
-        seconds++;
-        updateTimerDisplay();
-        saveTimerValue();
-    }
-
-    function updateTimerDisplay() {
-        document.getElementById('timerDisplay').textContent = 'Timer: ' + seconds + ' seconds';
-    }
-
-    function saveTimerValue() {
-        localStorage.setItem('timerValue', seconds.toString());
+    function updateTimerDisplay(timer) {
+        const timerContainer = document.getElementById('timer' + Object.keys(timers).find(key => timers[key] === timer));
+        timerContainer.querySelector('p').textContent = `Timer ${Object.keys(timers).find(key => timers[key] === timer)}: ${timer.seconds} seconds`;
     }
 </script>
 
