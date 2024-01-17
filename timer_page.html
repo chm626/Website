@@ -3,6 +3,34 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body {
+            position: relative;
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        #timerDisplay {
+            margin-bottom: 20px;
+        }
+
+        .button-container {
+            position: absolute;
+            display: flex;
+            justify-content: space-between;
+            width: 100%;
+            padding: 0 20px;
+        }
+
+        .button-container button {
+            margin: 5px;
+        }
+    </style>
     <title>Timer Page</title>
 </head>
 <body>
@@ -11,14 +39,18 @@
 
 <p id="timerDisplay">Timer: 0 seconds</p>
 
-<button onclick="startStopTimer()">Start/Stop Timer</button>
+<div class="button-container">
+    <button onclick="startStopTimer()">Start/Stop Timer</button>
+    <button onclick="resetTimer()">Reset Timer</button>
+    <button onclick="increaseTimer()">Increase Timer</button>
+    <button onclick="decreaseTimer()">Decrease Timer</button>
+</div>
 
 <script>
     let timerRunning = false;
     let seconds = 0;
     let timerInterval;
 
-    // Retrieve the timer value from localStorage on page load
     window.onload = function () {
         const storedSeconds = localStorage.getItem('timerValue');
         if (storedSeconds) {
@@ -37,16 +69,38 @@
         }
     }
 
+    function resetTimer() {
+        seconds = 0;
+        updateTimerDisplay();
+        saveTimerValue();
+    }
+
+    function increaseTimer() {
+        seconds++;
+        updateTimerDisplay();
+        saveTimerValue();
+    }
+
+    function decreaseTimer() {
+        if (seconds > 0) {
+            seconds--;
+            updateTimerDisplay();
+            saveTimerValue();
+        }
+    }
+
     function updateTimer() {
         seconds++;
         updateTimerDisplay();
-
-        // Save the timer value to localStorage
-        localStorage.setItem('timerValue', seconds.toString());
+        saveTimerValue();
     }
 
     function updateTimerDisplay() {
         document.getElementById('timerDisplay').textContent = 'Timer: ' + seconds + ' seconds';
+    }
+
+    function saveTimerValue() {
+        localStorage.setItem('timerValue', seconds.toString());
     }
 </script>
 
