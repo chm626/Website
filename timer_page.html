@@ -3,10 +3,38 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="styles.css">
-    <script>
-        // JavaScript code remains the same as the previous example
-    </script>
+    <style>
+        body {
+            position: relative;
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .timer-container {
+            margin-bottom: 40px;
+        }
+
+        .timer-container p {
+            margin-bottom: 10px;
+        }
+
+        .button-container {
+            position: absolute;
+            display: flex;
+            justify-content: space-between;
+            width: 100%;
+            padding: 0 20px;
+        }
+
+        .button-container button {
+            margin: 5px;
+        }
+    </style>
     <title>Timer Page</title>
 </head>
 <body>
@@ -35,10 +63,44 @@
     <button onclick="resetAllTimers()">Reset All Timers</button>
 </div>
 
-<div id="reset-button" onclick="resetAllTimers()">Reset</div>
-
 <script>
-    // JavaScript code remains the same as the previous example
+    const timers = {
+        timer1: { running: false, seconds: 0, interval: null },
+        timer2: { running: false, seconds: 0, interval: null },
+        timer3: { running: false, seconds: 0, interval: null },
+        timer4: { running: false, seconds: 0, interval: null }
+    };
+
+    function startStopTimer(timerId) {
+        const timer = timers['timer' + timerId];
+        if (timer.running) {
+            clearInterval(timer.interval);
+            timer.running = false;
+        } else {
+            timer.interval = setInterval(() => updateTimer(timerId), 1000);
+            timer.running = true;
+        }
+    }
+
+    function resetAllTimers() {
+        Object.values(timers).forEach(timer => {
+            clearInterval(timer.interval);
+            timer.seconds = 0;
+            timer.running = false;
+            updateTimerDisplay(timer);
+        });
+    }
+
+    function updateTimer(timerId) {
+        const timer = timers['timer' + timerId];
+        timer.seconds++;
+        updateTimerDisplay(timer);
+    }
+
+    function updateTimerDisplay(timer) {
+        const timerContainer = document.getElementById('timer' + Object.keys(timers).find(key => timers[key] === timer));
+        timerContainer.querySelector('p').textContent = `Timer ${Object.keys(timers).find(key => timers[key] === timer)}: ${timer.seconds} seconds`;
+    }
 </script>
 
 </body>
